@@ -49,16 +49,10 @@ export class StopwatchComponent implements OnDestroy {
   }
 
   wait() {
-    if (!this.gotFirstClick) {
-      this.gotFirstClick = true;
-      setTimeout(() => {
-        this.gotFirstClick = false;
-      }, this.doubleClickDelayMs);
-      return;
+    if (this.isDoubleClick()) {
+      this.pausedTime += Date.now() - this.startTime;
+      this.isRunning = false;
     }
-
-    this.pausedTime += Date.now() - this.startTime;
-    this.isRunning = false;
   }
 
   reset() {
@@ -66,5 +60,19 @@ export class StopwatchComponent implements OnDestroy {
     this.pausedTime = 0;
     this.displayTime = formatTime(0);
     this.isRunning = true;
+  }
+
+  private isDoubleClick() {
+    if (!this.gotFirstClick) {
+      this.gotFirstClick = true;
+
+      setTimeout(() => {
+        this.gotFirstClick = false;
+      }, this.doubleClickDelayMs);
+
+      return false;
+    }
+
+    return true;
   }
 }
