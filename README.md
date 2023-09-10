@@ -1,3 +1,3 @@
-# Angular Frontend dev test task
+# Stopwatch online
 
-Test task for the position of Front-End developer, Angular (2+)
+Experience precision timekeeping with our user-friendly online stopwatch. Ideal for tracking workouts, studying, gaming, and more. Start, stop, or reset the time with just one click.
