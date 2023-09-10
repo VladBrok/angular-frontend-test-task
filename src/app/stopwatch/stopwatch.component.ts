@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { interval, Subject, timer } from 'rxjs';
-import { buffer, debounceTime, startWith, takeUntil } from 'rxjs/operators';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
+// TODO: extract functions
 @Component({
   selector: 'app-stopwatch',
   templateUrl: './stopwatch.component.html',
@@ -9,15 +10,14 @@ import { buffer, debounceTime, startWith, takeUntil } from 'rxjs/operators';
 })
 export class StopwatchComponent implements OnDestroy {
   public isRunning = false;
+  public displayTime = '00:00:00';
 
   private destroy$ = new Subject<void>();
   private doubleClickDelayMs = 300;
   private startTime: number = Date.now();
   private pausedTime = 0;
-  private timer$ = interval(1000).pipe(takeUntil(this.destroy$));
+  private timer$ = timer(0, 1000).pipe(takeUntil(this.destroy$));
   private gotFirstClick = false;
-
-  displayTime = '00:00:00';
 
   constructor() {
     this.timer$.subscribe(() => this.updateTime());
