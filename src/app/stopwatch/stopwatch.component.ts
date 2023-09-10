@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { formatTime } from '../../utils/formatTime';
 
-// TODO: extract functions
 @Component({
   selector: 'app-stopwatch',
   templateUrl: './stopwatch.component.html',
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class StopwatchComponent implements OnDestroy {
   public isRunning = false;
-  public displayTime = '00:00:00';
+  public displayTime = formatTime(0);
 
   private destroy$ = new Subject<void>();
   private doubleClickDelayMs = 300;
@@ -35,15 +35,7 @@ export class StopwatchComponent implements OnDestroy {
 
     const now = Date.now();
     const elapsed = now - this.startTime + this.pausedTime;
-    this.displayTime = this.formatTime(elapsed);
-  }
-
-  private formatTime(milliseconds: number) {
-    const date = new Date(milliseconds);
-    const hours = date.getUTCHours().toString().padStart(2, '0');
-    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-    const seconds = date.getUTCSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+    this.displayTime = formatTime(elapsed);
   }
 
   start() {
@@ -72,7 +64,7 @@ export class StopwatchComponent implements OnDestroy {
   reset() {
     this.startTime = Date.now();
     this.pausedTime = 0;
-    this.displayTime = '00:00:00';
+    this.displayTime = formatTime(0);
     this.isRunning = true;
   }
 }
