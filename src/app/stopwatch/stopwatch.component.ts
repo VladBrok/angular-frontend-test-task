@@ -16,7 +16,7 @@ export class StopwatchComponent implements OnDestroy {
   private doubleClickDelayMs = 300;
   private startTime: number = Date.now();
   private pausedTime = 0;
-  private timer$ = timer(0, 1000).pipe(takeUntil(this.destroy$));
+  private timer$ = timer(0, 200).pipe(takeUntil(this.destroy$));
   private gotFirstClick = false;
 
   constructor() {
