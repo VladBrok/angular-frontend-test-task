@@ -8,10 +8,11 @@ import { buffer, debounceTime, takeUntil } from 'rxjs/operators';
   styleUrls: ['./stopwatch.component.css'],
 })
 export class StopwatchComponent implements OnDestroy {
+  public isRunning = false;
+
   private destroy$ = new Subject<void>();
   private click$ = new Subject<void>();
-  private doubleClickTimeMs = 250;
-  private isRunning = false;
+  private doubleClickDelayMs = 250;
   private startTime: number = Date.now();
   private pausedTime = 0;
   private timer$ = interval(1000).pipe(takeUntil(this.destroy$));
@@ -23,7 +24,7 @@ export class StopwatchComponent implements OnDestroy {
     this.click$
       .pipe(
         takeUntil(this.destroy$),
-        buffer(this.click$.pipe(debounceTime(this.doubleClickTimeMs)))
+        buffer(this.click$.pipe(debounceTime(this.doubleClickDelayMs)))
       )
       .subscribe((clicks: any) => {
         if (clicks.length === 2) {
@@ -38,14 +39,13 @@ export class StopwatchComponent implements OnDestroy {
   }
 
   private updateTime() {
-    if (this.isRunning) {
-      const now = Date.now();
-      if (this.startTime === null) {
-        throw new Error('Expected startTime to be defined');
-      }
-      const elapsed = now - this.startTime + this.pausedTime;
-      this.displayTime = this.formatTime(elapsed);
+    if (!this.isRunning) {
+      return;
     }
+
+    const now = Date.now();
+    const elapsed = now - this.startTime + this.pausedTime;
+    this.displayTime = this.formatTime(elapsed);
   }
 
   private formatTime(milliseconds: number) {
@@ -56,22 +56,25 @@ export class StopwatchComponent implements OnDestroy {
     return `${hours}:${minutes}:${seconds}`;
   }
 
-  startStop() {
-    if (this.isRunning) {
-      this.pausedTime += Date.now() - this.startTime;
-    } else {
-      this.startTime = Date.now();
-    }
-    this.isRunning = !this.isRunning;
+  start() {
+    this.startTime = Date.now();
+    this.isRunning = true;
+  }
+
+  stop() {
+    this.reset();
+    this.isRunning = false;
   }
 
   wait() {
-    this.startStop();
+    this.pausedTime += Date.now() - this.startTime;
+    this.isRunning = false;
   }
 
   reset() {
     this.startTime = Date.now();
     this.pausedTime = 0;
     this.displayTime = '00:00:00';
+    this.isRunning = true;
   }
 }

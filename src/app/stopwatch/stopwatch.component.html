@@ -1,6 +1,11 @@
 <div>
-  <h1>{{ displayTime }}</h1>
-  <button (click)="startStop()">Start/Stop</button>
-  <button (click)="wait()">Wait</button>
-  <button (click)="reset()">Reset</button>
+  <div>
+    <h1>{{ displayTime }}</h1>
+    <p>
+      <button *ngIf="!isRunning" (click)="start()">Start</button>
+      <button *ngIf="isRunning" (click)="stop()">Stop</button>
+      <button (click)="reset()">Reset</button>
+      <button *ngIf="isRunning" (click)="wait()">Wait</button>
+    </p>
+  </div>
 </div>
