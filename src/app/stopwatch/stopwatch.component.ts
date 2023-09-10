@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { interval, Subject } from 'rxjs';
-import { buffer, debounceTime, takeUntil } from 'rxjs/operators';
+import { interval, Subject, timer } from 'rxjs';
+import { buffer, debounceTime, startWith, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stopwatch',
@@ -11,26 +11,16 @@ export class StopwatchComponent implements OnDestroy {
   public isRunning = false;
 
   private destroy$ = new Subject<void>();
-  private click$ = new Subject<void>();
-  private doubleClickDelayMs = 250;
+  private doubleClickDelayMs = 300;
   private startTime: number = Date.now();
   private pausedTime = 0;
   private timer$ = interval(1000).pipe(takeUntil(this.destroy$));
+  private gotFirstClick = false;
 
   displayTime = '00:00:00';
 
   constructor() {
     this.timer$.subscribe(() => this.updateTime());
-    this.click$
-      .pipe(
-        takeUntil(this.destroy$),
-        buffer(this.click$.pipe(debounceTime(this.doubleClickDelayMs)))
-      )
-      .subscribe((clicks: any) => {
-        if (clicks.length === 2) {
-          this.wait();
-        }
-      });
   }
 
   ngOnDestroy() {
@@ -67,6 +57,14 @@ export class StopwatchComponent implements OnDestroy {
   }
 
   wait() {
+    if (!this.gotFirstClick) {
+      this.gotFirstClick = true;
+      setTimeout(() => {
+        this.gotFirstClick = false;
+      }, this.doubleClickDelayMs);
+      return;
+    }
+
     this.pausedTime += Date.now() - this.startTime;
     this.isRunning = false;
   }
