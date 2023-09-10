@@ -1,11 +1,21 @@
-<div>
-  <div>
-    <h1>{{ displayTime }}</h1>
-    <p>
-      <button *ngIf="!isRunning" (click)="start()">Start</button>
-      <button *ngIf="isRunning" (click)="stop()">Stop</button>
-      <button (click)="reset()">Reset</button>
-      <button *ngIf="isRunning" (click)="wait()">Wait</button>
+<div class="stopwatch__container">
+  <div class="stopwatch__inner-container">
+    <h1 class="stopwatch__timer">{{ displayTime }}</h1>
+    <p class="stopwatch__options">
+      <button *ngIf="!isRunning" (click)="start()" class="stopwatch__button">
+        Start
+      </button>
+      <button *ngIf="isRunning" (click)="stop()" class="stopwatch__button">
+        Stop
+      </button>
+      <button (click)="reset()" class="stopwatch__button">Reset</button>
     </p>
+    <button
+      [style.visibility]="isRunning ? 'visible' : 'hidden'"
+      (click)="wait()"
+      class="stopwatch__button stopwatch__wait-button"
+    >
+      Wait
+    </button>
   </div>
 </div>

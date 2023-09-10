@@ -92,6 +92,10 @@ video {
   vertical-align: baseline;
 }
 
+button {
+  border: none;
+}
+
 /* make sure to set some focus styles for accessibility */
 :focus {
   outline: 0;
@@ -201,6 +205,8 @@ audio:not([controls]) {
  */
 
 html {
+  --primary: #ffffff;
+  --secondary: #1d3340;
   font-family: "Lato", sans-serif;
   font-size: 100%; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
@@ -405,14 +411,6 @@ textarea {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-
-html,
-button,
-input,
-select,
-textarea {
-  color: #222;
 }
 
 ::-moz-selection {
